@@ -1,5 +1,11 @@
 package streamvalidator
 
+type StreamValidator interface {
+	Reset()
+	IsComplete() bool
+	Validate(data []byte) (bool, string)
+}
+
 type streamValidatorState struct {
 	bytesLeft           uint8
 	checkReserved       bool
@@ -8,7 +14,7 @@ type streamValidatorState struct {
 	overlongBitsToCheck uint8
 }
 
-func NewUtf8StreamValidator() *streamValidatorState {
+func NewUtf8StreamValidator() StreamValidator {
 	return &streamValidatorState{}
 }
 
