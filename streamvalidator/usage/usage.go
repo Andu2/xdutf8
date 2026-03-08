@@ -1,18 +1,3 @@
-# XD UTF-8
-
-Repository for my Go UTF-8 utils.
-
-## Stream Validator (xdutf8/streamvalidator)
-
-Incrementally checks whether the bytes passed to it are UTF-8. 
-If a character has not finished yet, it will still return that the string is valid, just not complete.
-
-This is useful when receiving a stream of bytes and needing to validate the incoming UTF-8 which may not be complete yet.
-The standard library unicode/utf8 package is only capable of validating completed strings.
-
-Usage:
-
-```go
 package main
 
 import (
@@ -43,21 +28,10 @@ func main() {
 		isComplete := validator.IsComplete()
 		fmt.Printf("Bytes: %b, valid: %v, complete: %v, msg: %s\n", chunk, valid, isComplete, errMsg)
 	}
-	
-	// output:
-	// Bytes: [11010000], valid: true, complete: false, msg: 
-	// Bytes: [10100000 1000000 11101000 10100000 10010000], valid: true, complete: true, msg: 
-	// Bytes: [11100000 10011111 10111111], valid: false, complete: false, msg: overlong character
-	// Bytes: [1100001 1100001 1100001 1100001 1100001], valid: false, complete: false, msg: previously found invalid
 
 	fmt.Println("Resetting")
 	validator.Reset()
 	valid, errMsg := validator.Validate(testChunks[3])
 	isComplete := validator.IsComplete()
 	fmt.Printf("Bytes: %b, valid: %v, complete: %v, msg: %s\n", testChunks[3], valid, isComplete, errMsg)
-
-	// output:
-	// Bytes: [1100001 1100001 1100001 1100001 1100001], valid: true, complete: true, msg:
 }
-```
-
